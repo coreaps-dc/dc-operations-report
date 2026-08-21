@@ -5,6 +5,7 @@ Outbound module for customer SLA summary by DC.
 ## Import Headers
 
 - `EXTERNORDERKEY`: counted order key
+- `STORERKEY`: business unit filter
 - `TYPE`: order type filter
 - `DELAY TIME`: `0` means on time, values greater than `0` mean delay
 - `AREA PENGIRIMAN`: delivery area filter
@@ -16,7 +17,8 @@ The DC name is inferred from the imported file name.
 
 The module summarizes:
 
-- `DC HCI`
+- `DC`
+- `BU`
 - `On Time`
 - `Delay`
 - `SLA`

@@ -2,6 +2,7 @@ import type { DcConfig, SlaCustomerRecord, SlaSummary } from './types'
 
 const requiredHeaders = [
   'EXTERNORDERKEY',
+  'STORERKEY',
   'TYPE',
   'DELAY TIME',
   'AREA PENGIRIMAN',
@@ -62,32 +63,38 @@ export function parseSlaCustomerFile(content: string, fileName: string): SlaCust
       delayTime,
       externOrderKey: getValue('EXTERNORDERKEY'),
       shippedDate: getValue('SHIPPED DATE'),
+      storerKey: getValue('STORERKEY'),
       type: getValue('TYPE'),
     }
   })
 }
 
-export function summarizeSla(records: SlaCustomerRecord[]): SlaSummary[] {
-  const byDc = new Map<string, SlaCustomerRecord[]>()
+export function summarizeSla(records: SlaCustomerRecord[], configs: DcConfig[]): SlaSummary[] {
+  const configByDc = new Map(configs.map((config) => [config.dcName, config]))
+  const byDcBu = new Map<string, SlaCustomerRecord[]>()
 
   for (const record of records) {
-    byDc.set(record.dcName, [...(byDc.get(record.dcName) ?? []), record])
+    const configBu = configByDc.get(record.dcName)?.bu
+    const bu = configBu || record.storerKey || 'UNMAPPED'
+    const key = `${record.dcName}::${bu}`
+    byDcBu.set(key, [...(byDcBu.get(key) ?? []), record])
   }
 
-  return Array.from(byDc.entries()).map(([dcName, rows]) => {
+  return Array.from(byDcBu.entries()).map(([key, rows]) => {
+    const [dcName, bu] = key.split('::')
     const uniqueOrders = new Map(rows.map((row) => [row.externOrderKey, row]))
     const orders = Array.from(uniqueOrders.values())
     const delay = orders.filter((row) => row.delayTime > 0).length
     const onTime = orders.length - delay
     const sla = orders.length === 0 ? 0 : (onTime / orders.length) * 100
 
-    return { dcName, delay, onTime, sla }
+    return { bu, dcName, delay, onTime, sla }
   })
 }
 
 export function filterRecords(
   records: SlaCustomerRecord[],
-  filters: { type: string; area: string; startDate: string; endDate: string },
+  filters: { type: string; area: string; bu: string; startDate: string; endDate: string },
 ) {
   return records.filter((record) => {
     const shippedTime = record.shippedDate ? new Date(record.shippedDate).getTime() : 0
@@ -96,6 +103,7 @@ export function filterRecords(
 
     return (
       (!filters.type || record.type === filters.type) &&
+      (!filters.bu || record.storerKey === filters.bu) &&
       (!filters.area || record.areaPengiriman === filters.area) &&
       (!startTime || shippedTime >= startTime) &&
       (!endTime || shippedTime <= endTime)
@@ -106,13 +114,13 @@ export function filterRecords(
 export function toSpreadsheetCsv(summary: SlaSummary[], configs: DcConfig[]) {
   const configByDc = new Map(configs.map((config) => [config.dcName, config]))
   const rows = [
-    ['DC HCI', 'Territory', 'BU', 'On Time', 'Delay', 'SLA'],
+    ['DC', 'BU', 'Territory', 'On Time', 'Delay', 'SLA'],
     ...summary.map((row) => {
       const config = configByDc.get(row.dcName)
       return [
         row.dcName,
+        row.bu || config?.bu || '',
         config?.territory ?? '',
-        config?.bu ?? '',
         String(row.onTime),
         String(row.delay),
         `${row.sla.toFixed(1)}%`,

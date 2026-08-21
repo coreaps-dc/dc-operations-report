@@ -5,6 +5,7 @@ export type SlaCustomerRecord = {
   areaPengiriman: string
   shippedDate: string
   dcName: string
+  storerKey: string
 }
 
 export type DcConfig = {
@@ -14,6 +15,7 @@ export type DcConfig = {
 }
 
 export type SlaSummary = {
+  bu: string
   dcName: string
   onTime: number
   delay: number

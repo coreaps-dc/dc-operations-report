@@ -41,10 +41,11 @@
 }
 
 .sla-total-card,
-.sla-sparkline-card {
+.sla-total-card--sla {
   border-radius: 28px;
-  display: grid;
+  display: flex;
   gap: var(--space-2);
+  justify-content: space-between;
 }
 
 .sla-total-card span {
@@ -71,7 +72,8 @@
   align-items: end;
   display: flex;
   gap: var(--space-2);
-  height: 90px;
+  height: 92px;
+  min-width: 120px;
 }
 
 .sla-sparkline span {
@@ -89,6 +91,24 @@
 }
 
 .sla-sparkline span:nth-child(3) {
+  background: var(--sla-red);
+}
+
+.sla-row-sparkline {
+  background: var(--color-brand-soft);
+  border-radius: var(--radius-pill);
+  display: flex;
+  gap: 3px;
+  height: 10px;
+  min-width: 120px;
+  overflow: hidden;
+}
+
+.sla-row-sparkline span:first-child {
+  background: var(--sla-green);
+}
+
+.sla-row-sparkline span:last-child {
   background: var(--sla-red);
 }
 

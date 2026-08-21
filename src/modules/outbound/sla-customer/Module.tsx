@@ -37,7 +37,13 @@ export function SlaCustomerModule() {
   const [records, setRecords] = useState<SlaCustomerRecord[]>([])
   const [configs, setConfigs] = useState<DcConfig[]>(readConfig)
   const [error, setError] = useState('')
-  const [filters, setFilters] = useState({ area: '', endDate: '', startDate: '', type: '' })
+  const [filters, setFilters] = useState({
+    area: '',
+    bu: '',
+    endDate: '',
+    startDate: '',
+    type: '',
+  })
   const [draftConfig, setDraftConfig] = useState<DcConfig>({
     bu: '',
     dcName: '',
@@ -45,7 +51,7 @@ export function SlaCustomerModule() {
   })
 
   const filteredRecords = useMemo(() => filterRecords(records, filters), [records, filters])
-  const summary = useMemo(() => summarizeSla(filteredRecords), [filteredRecords])
+  const summary = useMemo(() => summarizeSla(filteredRecords, configs), [configs, filteredRecords])
   const totalOrders = summary.reduce((total, row) => total + row.onTime + row.delay, 0)
   const totalDelay = summary.reduce((total, row) => total + row.delay, 0)
   const totalOnTime = summary.reduce((total, row) => total + row.onTime, 0)
@@ -54,6 +60,7 @@ export function SlaCustomerModule() {
   const areaOptions = Array.from(
     new Set(records.map((record) => record.areaPengiriman).filter(Boolean)),
   )
+  const buOptions = Array.from(new Set(records.map((record) => record.storerKey).filter(Boolean)))
 
   async function handleFiles(files: FileList | null) {
     if (!files) return
@@ -92,7 +99,10 @@ export function SlaCustomerModule() {
       <Card className="sla-upload-panel">
         <div>
           <strong>Drag or import data</strong>
-          <p>Required headers: EXTERNORDERKEY, TYPE, DELAY TIME, AREA PENGIRIMAN, SHIPPED DATE.</p>
+          <p>
+            Required headers: EXTERNORDERKEY, STORERKEY, TYPE, DELAY TIME, AREA PENGIRIMAN,
+            SHIPPED DATE.
+          </p>
         </div>
         <label className="sla-file-drop">
           <input
@@ -107,10 +117,17 @@ export function SlaCustomerModule() {
       </Card>
 
       <section className="sla-summary-grid">
-        <Card className="sla-total-card">
-          <span>{totalSla.toFixed(1)}%</span>
-          <strong>SLA</strong>
-          <p>{totalOrders} counted orders</p>
+        <Card className="sla-total-card sla-total-card--sla">
+          <div>
+            <span>{totalSla.toFixed(1)}%</span>
+            <strong>SLA</strong>
+            <p>{totalOrders} counted orders</p>
+          </div>
+          <div className="sla-sparkline" aria-label="dc-ontime-delay-sla-sparkline">
+            <span style={{ height: `${Math.max(12, totalSla)}%` }} />
+            <span style={{ height: `${Math.max(12, 100 - totalSla)}%` }} />
+            <span style={{ height: `${Math.max(12, totalOrders ? 82 : 12)}%` }} />
+          </div>
         </Card>
         <Card className="sla-total-card sla-total-card--success">
           <span>{totalOnTime}</span>
@@ -121,14 +138,6 @@ export function SlaCustomerModule() {
           <span>{totalDelay}</span>
           <strong>Delay</strong>
           <p>Delay time greater than 0</p>
-        </Card>
-        <Card className="sla-sparkline-card">
-          <strong>dc-ontime-delay-sla-sparkline</strong>
-          <div className="sla-sparkline" aria-hidden="true">
-            <span style={{ height: `${Math.max(12, totalSla)}%` }} />
-            <span style={{ height: `${Math.max(12, 100 - totalSla)}%` }} />
-            <span style={{ height: `${Math.max(12, totalOrders ? 82 : 12)}%` }} />
-          </div>
         </Card>
       </section>
 
@@ -152,6 +161,18 @@ export function SlaCustomerModule() {
           {typeOptions.map((type) => (
             <option key={type} value={type}>
               {type}
+            </option>
+          ))}
+        </Select>
+        <Select
+          label="STORERKEY / BU"
+          onChange={(event) => setFilters((value) => ({ ...value, bu: event.target.value }))}
+          value={filters.bu}
+        >
+          <option value="">All BU</option>
+          {buOptions.map((bu) => (
+            <option key={bu} value={bu}>
+              {bu}
             </option>
           ))}
         </Select>
@@ -220,7 +241,8 @@ export function SlaCustomerModule() {
       ) : (
         <DataTable
           columns={[
-            { header: 'DC HCI', key: 'dcName', render: (row) => row.dcName },
+            { header: 'DC', key: 'dcName', render: (row) => row.dcName },
+            { header: 'BU', key: 'bu', render: (row) => row.bu },
             { align: 'right', header: 'On Time', key: 'onTime', render: (row) => row.onTime },
             { align: 'right', header: 'Delay', key: 'delay', render: (row) => row.delay },
             {
@@ -229,8 +251,18 @@ export function SlaCustomerModule() {
               key: 'sla',
               render: (row) => `${row.sla.toFixed(1)}%`,
             },
+            {
+              header: 'Sparkline',
+              key: 'sparkline',
+              render: (row) => (
+                <div className="sla-row-sparkline" aria-label="dc-ontime-delay-sla-sparkline">
+                  <span style={{ width: `${Math.max(8, row.sla)}%` }} />
+                  <span style={{ width: `${Math.max(8, 100 - row.sla)}%` }} />
+                </div>
+              ),
+            },
           ]}
-          getRowKey={(row) => row.dcName}
+          getRowKey={(row) => `${row.dcName}-${row.bu}`}
           rows={summary}
         />
       )}

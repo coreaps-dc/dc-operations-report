@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Badge, Dropdown } from '../../foundation/design-system'
 import { Breadcrumb, ToastRegion } from '../global-ui'
 import { departmentNavigation } from '../navigation'
@@ -12,12 +12,8 @@ export function AppShell() {
   const [isDarkMode, setIsDarkMode] = useState(false)
   const currentDepartmentId = route.type === 'department' ? route.departmentId : undefined
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = isDarkMode ? 'dark' : 'light'
-  }, [isDarkMode])
-
   return (
-    <div className="app-shell">
+    <div className="app-shell" data-theme={isDarkMode ? 'dark' : 'light'}>
       <header className="app-header">
         <div className="window-controls" aria-hidden="true">
           <span className="window-dot window-dot--red" />
