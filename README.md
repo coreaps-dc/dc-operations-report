@@ -11,18 +11,22 @@ business logic, or create production report modules.
 - Outbound
 - Inbound
 - Inventory
-- Storing
+- Transport
 
 ## Architecture
 
 The application uses an App Shell plus modular report architecture:
 
 - `src/app` owns layout, navigation, and route selection.
+- `src/foundation` owns reusable design, utilities, types, and services.
 - `src/departments` owns department metadata.
 - `src/modules` owns the report module contract and central registry.
 - `src/pages` owns shell-level screens.
 - Future report modules should live in independent module folders and register
   only their metadata and entry component.
+
+The foundation includes reusable design system primitives and shared application
+components, but still contains no report business logic.
 
 Read the full architecture notes in `docs/ARCHITECTURE.md`.
 

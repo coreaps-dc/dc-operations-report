@@ -1,4 +1,4 @@
-import { AppShell } from './app/AppShell'
+import { AppShell } from './app/layout/AppShell'
 import './App.css'
 
 export default function App() {

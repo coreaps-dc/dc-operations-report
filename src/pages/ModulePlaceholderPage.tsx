@@ -1,3 +1,4 @@
+import { EmptyState, SectionHeader } from '../foundation/shared-components'
 import { moduleRegistry } from '../modules/registry'
 
 type ModulePlaceholderPageProps = {
@@ -19,14 +20,16 @@ export function ModulePlaceholderPage({ moduleId }: ModulePlaceholderPageProps) 
   return (
     <section className="page-stack">
       <header className="page-header">
-        <p className="eyebrow">{module.department}</p>
-        <h1>{module.title}</h1>
-        <p>{module.description}</p>
+        <SectionHeader
+          description={module.description}
+          eyebrow={module.department}
+          title={module.title}
+        />
       </header>
-      <div className="empty-state">
-        <strong>Module shell only</strong>
-        <p>This module has metadata but no report implementation yet.</p>
-      </div>
+      <EmptyState
+        description="This module has metadata but no report implementation yet."
+        title="Module shell only"
+      />
     </section>
   )
 }

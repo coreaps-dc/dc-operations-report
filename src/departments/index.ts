@@ -1,4 +1,4 @@
-export type DepartmentId = 'outbound' | 'inbound' | 'inventory' | 'storing'
+export type DepartmentId = 'outbound' | 'inbound' | 'inventory' | 'transport'
 
 export type DepartmentDefinition = {
   id: DepartmentId
@@ -27,10 +27,10 @@ export const departments: DepartmentDefinition[] = [
     owner: 'Inventory Control',
   },
   {
-    id: 'storing',
-    name: 'Storing',
-    description: 'Storage capacity, location usage, replenishment, and slotting reports.',
-    owner: 'Storing Operations',
+    id: 'transport',
+    name: 'Transport',
+    description: 'Transport planning, fleet movement, handover, and delivery flow reports.',
+    owner: 'Transport Operations',
   },
 ]
 

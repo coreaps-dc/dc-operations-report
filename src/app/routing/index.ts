@@ -1,10 +1,11 @@
 import { useSyncExternalStore } from 'react'
-import { isDepartmentId } from '../departments'
-import { moduleRegistry } from '../modules/registry'
+import { isDepartmentId } from '../../departments'
+import type { DepartmentId } from '../../departments'
+import { moduleRegistry } from '../../modules/registry'
 
 export type RouteState =
   | { type: 'home' }
-  | { type: 'department'; departmentId: string }
+  | { type: 'department'; departmentId: DepartmentId }
   | { type: 'module'; moduleId: string }
 
 export function getRouteState(): RouteState {
