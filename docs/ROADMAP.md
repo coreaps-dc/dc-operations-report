@@ -18,10 +18,11 @@
 
 ## Phase 2: First Module
 
-- Select one report candidate.
-- Create one isolated module folder.
-- Validate module integration through the registry.
-- Add tests around module-specific behavior.
+- Start with Outbound SLA Customer.
+- Import CSV/TSV data using the required SLA headers.
+- Summarize on time, delay, and SLA by DC.
+- Export spreadsheet-ready backup CSV.
+- Keep DC territory and BU configuration editable from the app.
 
 ## Phase 3: Report Migration
 

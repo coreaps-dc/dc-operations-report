@@ -1,0 +1,138 @@
+.sla-module {
+  --sla-green: #28c840;
+  --sla-orange: #ffbd2e;
+  --sla-red: #ff5f57;
+}
+
+.sla-upload-panel,
+.sla-config-panel {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.sla-upload-panel p {
+  color: var(--color-text-muted);
+  margin: var(--space-1) 0 0;
+}
+
+.sla-file-drop {
+  align-items: center;
+  background: linear-gradient(135deg, var(--color-brand-soft), var(--color-surface));
+  border: 1px dashed var(--color-border-strong);
+  border-radius: 28px;
+  color: var(--color-brand);
+  cursor: pointer;
+  display: flex;
+  font-weight: 900;
+  justify-content: center;
+  min-height: 118px;
+  padding: var(--space-5);
+  text-align: center;
+}
+
+.sla-file-drop input {
+  display: none;
+}
+
+.sla-summary-grid {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.sla-total-card,
+.sla-sparkline-card {
+  border-radius: 28px;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.sla-total-card span {
+  color: var(--color-brand);
+  font-size: var(--text-3xl);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.sla-total-card--success span {
+  color: var(--sla-green);
+}
+
+.sla-total-card--danger span {
+  color: var(--sla-red);
+}
+
+.sla-total-card p {
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.sla-sparkline {
+  align-items: end;
+  display: flex;
+  gap: var(--space-2);
+  height: 90px;
+}
+
+.sla-sparkline span {
+  border-radius: var(--radius-pill);
+  flex: 1;
+  min-height: 12px;
+}
+
+.sla-sparkline span:nth-child(1) {
+  background: var(--sla-green);
+}
+
+.sla-sparkline span:nth-child(2) {
+  background: var(--sla-orange);
+}
+
+.sla-sparkline span:nth-child(3) {
+  background: var(--sla-red);
+}
+
+.sla-config-form {
+  align-items: end;
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.sc-loading-state span {
+  animation: sla-pulse-loader 1.2s ease-in-out infinite;
+  border-color: var(--sla-orange);
+  border-top-color: var(--sla-red);
+  box-shadow: 0 0 0 4px rgba(40, 200, 64, 0.12);
+}
+
+@keyframes sla-pulse-loader {
+  0% {
+    border-color: var(--sla-green);
+    transform: scale(0.9) rotate(0deg);
+  }
+
+  50% {
+    border-color: var(--sla-orange);
+    transform: scale(1.08) rotate(180deg);
+  }
+
+  100% {
+    border-color: var(--sla-red);
+    transform: scale(0.9) rotate(360deg);
+  }
+}
+
+@media (max-width: 980px) {
+  .sla-summary-grid,
+  .sla-config-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .sla-summary-grid,
+  .sla-config-form {
+    grid-template-columns: 1fr;
+  }
+}

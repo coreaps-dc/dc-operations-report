@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Badge, Dropdown } from '../../foundation/design-system'
 import { Breadcrumb, ToastRegion } from '../global-ui'
 import { departmentNavigation } from '../navigation'
@@ -8,11 +9,21 @@ import { ModulePlaceholderPage } from '../../pages/ModulePlaceholderPage'
 
 export function AppShell() {
   const route = useRouteState()
+  const [isDarkMode, setIsDarkMode] = useState(false)
   const currentDepartmentId = route.type === 'department' ? route.departmentId : undefined
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = isDarkMode ? 'dark' : 'light'
+  }, [isDarkMode])
 
   return (
     <div className="app-shell">
       <header className="app-header">
+        <div className="window-controls" aria-hidden="true">
+          <span className="window-dot window-dot--red" />
+          <span className="window-dot window-dot--orange" />
+          <span className="window-dot window-dot--green" />
+        </div>
         <a className="brand brand--compact" href="#/">
           <span className="brand-mark">RDC</span>
           <span>
@@ -34,6 +45,14 @@ export function AppShell() {
             ))}
           </Dropdown>
           <Badge tone="brand">Foundation</Badge>
+          <button
+            aria-pressed={isDarkMode}
+            className="theme-toggle"
+            onClick={() => setIsDarkMode((value) => !value)}
+            type="button"
+          >
+            {isDarkMode ? 'Light' : 'Dark'}
+          </button>
           <div aria-label="User profile" className="user-profile">
             <span>SDC</span>
             <strong>Ops Team</strong>

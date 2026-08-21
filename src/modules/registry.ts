@@ -1,4 +1,4 @@
 import type { ReportModuleDefinition } from './types'
+import { slaCustomerModule } from './outbound/sla-customer'
 
-// Register future report modules here. Keep each module implementation in its own folder.
-export const moduleRegistry: ReportModuleDefinition[] = []
+export const moduleRegistry: ReportModuleDefinition[] = [slaCustomerModule]

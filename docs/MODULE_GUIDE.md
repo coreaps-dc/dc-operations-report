@@ -68,5 +68,5 @@ is needed by more than one module, move it into the appropriate
 
 ## Current Phase Rule
 
-Do not add real report modules in the foundation phase. This repository is
-currently prepared for modules, but contains none.
+The first module is `src/modules/outbound/sla-customer`. Use it as the reference
+shape for future modules without copying its business rules into shared layers.
