@@ -11,6 +11,18 @@ implemented by this contract.
 UI -> Module Service -> GoogleAppsScriptApiPort -> Apps Script REST API -> Spreadsheet / Drive
 ```
 
+## OIDC Verification Gateway
+
+The frontend never calls an Apps Script deployment URL directly. It calls a
+provider-neutral OIDC Verification Gateway. The gateway verifies the original
+OIDC token and forwards an HMAC-signed identity envelope to Apps Script. Apps
+Script verifies the signature, timestamp, and one-time nonce before any scope or
+partition operation. Missing configuration fails closed.
+
+The generic contract is `GatewayAuthenticationEnvelope`; the Apps Script adapter
+is in `backend/apps-script/src/GatewayAuth.gs`. No identity provider, gateway
+vendor, secret, or deployment URL is committed here.
+
 ## Spreadsheet Structure
 
 Each database is a logical Spreadsheet. It may be split later for operational

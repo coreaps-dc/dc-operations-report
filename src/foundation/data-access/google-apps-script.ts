@@ -1,6 +1,7 @@
 import type { ApiRequest } from '.'
 import type {
   AppsScriptApiResponse,
+  GatewayAuthenticationEnvelope,
   PartitionLookup,
 } from '../contracts/google-apps-script'
 import type { EntityId } from '../types'
@@ -15,6 +16,15 @@ export interface GoogleAppsScriptApiPort {
     request: ApiRequest<TBody>,
     context?: ServiceContext,
   ): Promise<AppsScriptApiResponse<TData>>
+}
+
+/**
+ * The frontend targets an OIDC Verification Gateway, never an Apps Script URL
+ * directly. The gateway owns token verification and creates this envelope for
+ * the downstream Apps Script adapter.
+ */
+export type GatewayForwardedRequest<TBody = unknown> = ApiRequest<TBody> & {
+  gatewayAuthentication: GatewayAuthenticationEnvelope
 }
 
 /** Feature-facing request shape: physical Spreadsheet IDs and sheet names are intentionally absent. */

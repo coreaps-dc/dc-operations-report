@@ -12,6 +12,26 @@ export type ApiMeta = {
   apiVersion: string
 }
 
+/** Identity normalized by the OIDC Verification Gateway, never asserted by the frontend. */
+export type TrustedGatewayIdentity = {
+  subject: string
+  issuer: string
+  audience: string
+  roles: readonly string[]
+  permittedScopes: readonly DataScope[]
+}
+
+/**
+ * Signed by the verification gateway and verified by Apps Script with a shared
+ * secret held only in each backend runtime's configuration.
+ */
+export type GatewayAuthenticationEnvelope = {
+  identity: TrustedGatewayIdentity
+  issuedAt: string
+  nonce: string
+  signature: string
+}
+
 export type ApiSuccess<TData> = {
   ok: true
   data: TData
