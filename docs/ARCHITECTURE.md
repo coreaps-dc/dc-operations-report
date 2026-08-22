@@ -30,6 +30,7 @@ src/
     utilities/
     types/
     services/
+    data-access/
   departments/
   modules/
     inventory/
@@ -63,9 +64,44 @@ The foundation layer owns reusable, cross-application building blocks:
 - `src/foundation/utilities`: generic helper functions
 - `src/foundation/types`: cross-cutting application types
 - `src/foundation/services`: shared service adapters
+- `src/foundation/data-access`: backend-facing repository ports and pagination contracts
 
 Foundation code must stay domain-neutral. It may be used by App Shell and future
 modules, but it must not import from specific modules.
+
+## Data Access Boundary
+
+All future data flows follow this direction:
+
+```text
+UI component -> module service -> data-access port -> API/backend -> database
+```
+
+- React components call a module service contract only.
+- Module services translate UI intent into data-access calls.
+- `foundation/data-access` defines ports only; it contains no production API client,
+  database SDK, credentials, or vendor choice.
+- Concrete transport implementations belong outside component folders and are
+  injected into module services when a backend decision is approved.
+- `docs/DATA_BACKEND_ARCHITECTURE.md` is the locked, vendor-neutral data and
+  backend decision record.
+- `docs/GOOGLE_APPS_SCRIPT_BACKEND_CONTRACT.md` defines the future Apps Script,
+  Spreadsheet, and Drive contract without an implementation.
+
+## Backend Lock
+
+The platform starts with one organization while retaining organization scope in
+its contracts for a future multi-organization deployment. The backend enforces
+Organization -> Territory -> Business Unit -> Distribution Center access scope;
+the frontend is never a security boundary. The system of record will be a
+relational database behind a stateless API, with OAuth/OIDC-ready SSO and no
+selected provider. Manual import and future API/WMS integration use the same
+raw -> validation -> staging -> canonical -> aggregation pipeline.
+
+For Google Spreadsheet storage, a facility is logical while partitions are
+physical storage segments. Feature modules request Facility ID and optional
+date/range only; the Apps Script data-access adapter resolves the partition and
+Spreadsheet internally. See `docs/GOOGLE_APPS_SCRIPT_BACKEND_CONTRACT.md`.
 
 ### Design System
 
@@ -92,6 +128,7 @@ Shared components are reusable application-level building blocks:
 
 - DataTable
 - KPI Card
+- Page Header
 - Section Header
 - Filter Bar
 - Date Picker
@@ -167,12 +204,15 @@ modules -> foundation
 modules -> departments
 app -> foundation
 pages -> foundation
+modules -> foundation/services -> foundation/data-access
 ```
 
 Rules:
 
 - `foundation` must not import from `app`, `pages`, or concrete modules.
 - Concrete modules must not import from each other.
+- React components must not import API clients, database SDKs, or data-access implementations.
+- Modules must not access a database directly; they use module services and the shared ports.
 - Concrete modules must integrate through `src/modules/registry.ts`.
 - App Shell must not import implementation details from a concrete module.
 - Business logic must not live in shared UI or App Shell files.

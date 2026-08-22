@@ -55,6 +55,18 @@ drawers unless the foundation layer is missing a required reusable capability.
 Use `src/app/global-ui/state.tsx` for loading, empty, error, success, skeleton,
 toast, and offline states.
 
+## Data Access Usage
+
+Module UI must depend on a service contract, never on `fetch`, an API SDK, or a
+database client. Reusable contracts are available in:
+
+- `src/foundation/services`
+- `src/foundation/data-access`
+
+Keep module-specific query and command types inside the module. A future module
+service can implement `QueryService` or `CommandService` and use a
+`DataAccessPort` supplied by the composition layer.
+
 ## Registration
 
 After creating a module folder, add the module definition to
@@ -68,5 +80,6 @@ is needed by more than one module, move it into the appropriate
 
 ## Current Phase Rule
 
-The first module is `src/modules/outbound/sla-customer`. Use it as the reference
-shape for future modules without copying its business rules into shared layers.
+Do not create, migrate, or alter report behavior while the platform foundation
+is being refined. Existing modules remain isolated and must not shape shared
+foundation contracts with report-specific rules.

@@ -45,6 +45,7 @@ Read only the relevant foundation area:
 - `src/foundation/utilities`
 - `src/foundation/types`
 - `src/foundation/services`
+- `src/foundation/data-access`
 
 Foundation code must not import from concrete modules.
 
@@ -59,6 +60,16 @@ When changing composed reusable components, read:
 - `src/foundation/shared-components/components.css`
 
 When changing global UX state, read `src/app/global-ui/state.tsx`.
+
+When adding a backend later, read `src/foundation/services/index.ts` and
+`src/foundation/data-access/index.ts` first. Do not put network or database
+access in React components.
+
+Read `docs/DATA_BACKEND_ARCHITECTURE.md` before making backend, authentication,
+data scope, import, retention, or integration decisions.
+
+Read `docs/GOOGLE_APPS_SCRIPT_BACKEND_CONTRACT.md` before changing Apps Script,
+Google Spreadsheet, Google Drive, API response, or facility mapping contracts.
 
 ## Foundation Phase Constraints
 
