@@ -1,4 +1,4 @@
-import { EmptyState, SectionHeader } from '../foundation/shared-components'
+import { EmptyState, PageHeader } from '../foundation/shared-components'
 import { moduleRegistry } from '../modules/registry'
 
 type ModulePlaceholderPageProps = {
@@ -20,7 +20,7 @@ export function ModulePlaceholderPage({ moduleId }: ModulePlaceholderPageProps) 
   return (
     <section className="page-stack">
       <header className="page-header">
-        <SectionHeader
+        <PageHeader
           description={module.description}
           eyebrow={module.department}
           title={module.title}

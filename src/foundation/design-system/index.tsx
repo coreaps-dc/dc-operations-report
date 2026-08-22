@@ -109,9 +109,10 @@ export function Card({ as: Element = 'article', className, ...props }: CardProps
 export type TabsProps = HTMLAttributes<HTMLDivElement> & {
   tabs: Array<{ id: string; label: string; content: ReactNode }>
   activeId: string
+  onChange?: (id: string) => void
 }
 
-export function Tabs({ activeId, className, tabs, ...props }: TabsProps) {
+export function Tabs({ activeId, className, onChange, tabs, ...props }: TabsProps) {
   const activeTab = tabs.find((tab) => tab.id === activeId) ?? tabs[0]
 
   return (
@@ -122,6 +123,7 @@ export function Tabs({ activeId, className, tabs, ...props }: TabsProps) {
             aria-selected={activeTab?.id === tab.id}
             className="ds-tabs__tab"
             key={tab.id}
+            onClick={() => onChange?.(tab.id)}
             role="tab"
             type="button"
           >
@@ -188,17 +190,19 @@ export function Modal({ actions, children, className, title, ...props }: ModalPr
 export type DrawerProps = HTMLAttributes<HTMLElement> & {
   title: string
   position?: 'left' | 'right'
+  open?: boolean
 }
 
 export function Drawer({
   children,
   className,
+  open = true,
   position = 'right',
   title,
   ...props
 }: DrawerProps) {
   return (
-    <aside className={classes('ds-drawer', `ds-drawer--${position}`, className)} {...props}>
+    <aside aria-hidden={!open} className={classes('ds-drawer', `ds-drawer--${position}`, !open && 'ds-drawer--closed', className)} {...props}>
       <header className="ds-drawer__header">
         <h2>{title}</h2>
       </header>

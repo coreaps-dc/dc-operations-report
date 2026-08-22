@@ -89,6 +89,26 @@ export type SectionHeaderProps = {
   actions?: ReactNode
 }
 
+export type PageHeaderProps = {
+  title: string
+  description?: ReactNode
+  eyebrow?: string
+  actions?: ReactNode
+}
+
+export function PageHeader({ actions, description, eyebrow, title }: PageHeaderProps) {
+  return (
+    <header className="sc-page-header">
+      <div>
+        {eyebrow ? <p className="eyebrow">{eyebrow}</p> : null}
+        <h1>{title}</h1>
+        {description ? <p>{description}</p> : null}
+      </div>
+      {actions ? <div className="sc-page-header__actions">{actions}</div> : null}
+    </header>
+  )
+}
+
 export function SectionHeader({ actions, description, eyebrow, title }: SectionHeaderProps) {
   return (
     <div className="sc-section-header">

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Badge, Dropdown } from '../../foundation/design-system'
+import { Badge, Dropdown, IconButton, Tooltip } from '../../foundation/design-system'
 import { Breadcrumb, ToastRegion } from '../global-ui'
 import { departmentNavigation } from '../navigation'
 import { useRouteState } from '../routing'
@@ -40,15 +40,18 @@ export function AppShell() {
               </a>
             ))}
           </Dropdown>
-          <Badge tone="brand">Foundation</Badge>
+          <Badge tone="success">Platform ready</Badge>
           <button
             aria-pressed={isDarkMode}
             className="theme-toggle"
             onClick={() => setIsDarkMode((value) => !value)}
             type="button"
           >
-            {isDarkMode ? 'Light' : 'Dark'}
+            {isDarkMode ? 'Light theme' : 'Dark theme'}
           </button>
+          <Tooltip content="Workspace notifications">
+            <IconButton label="Notifications" size="sm" variant="ghost">!</IconButton>
+          </Tooltip>
           <div aria-label="User profile" className="user-profile">
             <span>SDC</span>
             <strong>Ops Team</strong>
@@ -73,11 +76,19 @@ export function AppShell() {
               href={`#/${item.id}`}
               key={item.id}
             >
+              <i aria-hidden="true">{item.label.slice(0, 1)}</i>
               <span>{item.label}</span>
               <small>{item.description}</small>
             </a>
           ))}
         </nav>
+        <div className="sidebar-footer">
+          <span className="sidebar-footer__signal" aria-hidden="true" />
+          <div>
+            <strong>Platform foundation</strong>
+            <small>UI and data contracts ready</small>
+          </div>
+        </div>
       </aside>
 
       <main className="main-panel">

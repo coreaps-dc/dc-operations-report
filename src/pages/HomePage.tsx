@@ -1,13 +1,13 @@
 import { departments } from '../departments'
 import { Card } from '../foundation/design-system'
-import { KpiCard, SectionHeader } from '../foundation/shared-components'
+import { KpiCard, PageHeader } from '../foundation/shared-components'
 import { moduleRegistry } from '../modules/registry'
 
 export function HomePage() {
   return (
     <section className="page-stack">
       <header className="page-header">
-        <SectionHeader
+        <PageHeader
           description="App Shell for operational reporting modules across Outbound, Inbound, Inventory, and Transport. This foundation intentionally contains no report business logic yet."
           eyebrow="Centralized DC reporting foundation"
           title="RDC SDC Ops Report"
@@ -21,7 +21,7 @@ export function HomePage() {
           value={departments.length}
         />
         <KpiCard
-          description="No legacy reports are migrated in this foundation phase."
+          description="Registered modules remain isolated from shared foundation code."
           label="Report modules"
           tone="neutral"
           value={moduleRegistry.length}

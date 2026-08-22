@@ -1,7 +1,7 @@
 import { departments } from '../departments'
 import type { DepartmentId } from '../departments'
 import { Card } from '../foundation/design-system'
-import { EmptyState, SectionHeader, StatusBadge } from '../foundation/shared-components'
+import { EmptyState, PageHeader, SectionHeader, StatusBadge } from '../foundation/shared-components'
 import { moduleRegistry } from '../modules/registry'
 
 type DepartmentPageProps = {
@@ -19,7 +19,7 @@ export function DepartmentPage({ departmentId }: DepartmentPageProps) {
   return (
     <section className="page-stack">
       <header className="page-header">
-        <SectionHeader
+        <PageHeader
           description={department.description}
           eyebrow={department.owner}
           title={department.name}
